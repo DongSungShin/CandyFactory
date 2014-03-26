@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.IO;
 
 namespace CandyFactoryMapEditor
 {
@@ -16,7 +17,7 @@ namespace CandyFactoryMapEditor
         List<Point> m_ControlPoints = new List<Point>();
         List<Point> m_CurvePoints = new List<Point>();
 
-        
+        Bitmap m_kMapImage = null;
 
         public Form1()
         {
@@ -28,13 +29,13 @@ namespace CandyFactoryMapEditor
             // 최초 위치 설정
             Point pt = new Point();
             pt.X = 50;
-            pt.Y = 300;
+            pt.Y = 50;
             m_ControlPoints.Add(pt);
             pt.X = 50 + 125;
             pt.Y = 50 + 125;
             m_ControlPoints.Add(pt);
             pt.X = 300;
-            pt.Y = 50;
+            pt.Y = 300;
             m_ControlPoints.Add(pt);
             RecalcSpline();
         }
@@ -159,29 +160,13 @@ namespace CandyFactoryMapEditor
         private void OnMouseUp(object sender, MouseEventArgs e)
         {
             m_MoveIndex = -1;
-
-            //int index = IsInsideControlPoint(e.Location);
-            //if (index >= 0)
-            //{
-            //    //we are moving a control point around
-            //    m_MoveIndex = index;
-            //}
-            //else //we are adding control points
-            //{
-            //    int nLine = IsLinePoint(e.Location);
-            //    if (nLine >= 0)
-            //        m_ControlPoints.InsertAt(nLine + 1, e.Location);
-            //    //else
-            //    //m_ControlPoints.Add(point);
-            //    RecalcSpline();
-
-            //}
         }
 
         private void OnMouseMove(object sender, MouseEventArgs e)
         {
+            // 포인트 인덱스 가져오기
             int index = IsInsideControlPoint(e.Location);
-            if (index > 0)
+            if (index >= 0)
             {
                 this.Cursor = Cursors.Cross;
                 if (m_MoveIndex >= 0)
@@ -199,7 +184,7 @@ namespace CandyFactoryMapEditor
                     this.Cursor = Cursors.Default;
             }
 
-            //Invalidate(true);
+            Invalidate(true);
         }
 
         private void OnMouseDown(object sender, MouseEventArgs e)
@@ -212,7 +197,8 @@ namespace CandyFactoryMapEditor
             {
                 int nLine = IsLinePoint(e.Location);
                 if (nLine >= 0)
-                    m_ControlPoints.Add(e.Location);
+                    //m_ControlPoints.Add(e.Location);
+                m_ControlPoints.Insert(m_ControlPoints.Count - 1, e.Location);
 
                 RecalcSpline();
             }
@@ -242,10 +228,14 @@ namespace CandyFactoryMapEditor
 
         private void splitContainer1_Panel1_Paint(object sender, PaintEventArgs e)
         {
+            Graphics _graphics = e.Graphics;
+
+            // Map Draw
+            if (m_kMapImage != null)
+                _graphics.DrawImage(m_kMapImage, new Point(0, 0));
+
             Pen _pen = new Pen(Color.Red);
             _pen.Width = 3;
-
-            Graphics _graphics = e.Graphics;
 
             // 커브선 그리기
             //_graphics.DrawBeziers(_pen, m_CurvePoints.ToArray());
@@ -253,13 +243,31 @@ namespace CandyFactoryMapEditor
 
             // 포인트 그리기
             _pen.Color = Color.Blue;
-            for (int i = 0; i < m_ControlPoints.Count; ++i)
+            for (int i = 1; i < m_ControlPoints.Count - 1; ++i)
                 _graphics.DrawEllipse(_pen, new Rectangle(m_ControlPoints[i], new Size(5, 5)));
+
+            // 시작과 끝은 따로
+            _pen.Color = Color.Purple;
+            _graphics.DrawRectangle(_pen, new Rectangle(m_ControlPoints[0], new Size(5, 5)));
+            _pen.Color = Color.Green;
+            _graphics.DrawRectangle(_pen, new Rectangle(m_ControlPoints[m_ControlPoints.Count - 1], new Size(5, 5)));
 
             _pen.Dispose();
             _graphics.Dispose();
         }
 
+        // 맵에 사용할 파일을 가져온다.
+        private void MapOpen_Click(object sender, EventArgs e)
+        {
+            this.openFileDialog1.InitialDirectory = Directory.GetCurrentDirectory();
+            this.openFileDialog1.DefaultExt = "MapFile";
+            this.openFileDialog1.Filter = "All Files(*.*)|*.*|PNG Files(*.png)|*.png |JPG Files(*.jpg)|*.jpg";
 
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                m_kMapImage = new Bitmap(this.openFileDialog1.FileName);
+                //m_kClipView.OpenProject(openFileDialog1.FileName);
+            }
+        }
     }
 }

@@ -29,7 +29,10 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.MapOpen = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -42,9 +45,30 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer1_Panel1_Paint);
+            this.splitContainer1.Panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.OnMouseDown);
+            this.splitContainer1.Panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.OnMouseMove);
+            this.splitContainer1.Panel1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.OnMouseUp);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.MapOpen);
             this.splitContainer1.Size = new System.Drawing.Size(1126, 624);
             this.splitContainer1.SplitterDistance = 818;
             this.splitContainer1.TabIndex = 0;
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // MapOpen
+            // 
+            this.MapOpen.Location = new System.Drawing.Point(15, 12);
+            this.MapOpen.Name = "MapOpen";
+            this.MapOpen.Size = new System.Drawing.Size(162, 27);
+            this.MapOpen.TabIndex = 0;
+            this.MapOpen.Text = "맵 파일 가져오기";
+            this.MapOpen.UseVisualStyleBackColor = true;
+            this.MapOpen.Click += new System.EventHandler(this.MapOpen_Click);
             // 
             // Form1
             // 
@@ -56,9 +80,7 @@
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.OnPaint);
-            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.OnMouseDown);
-            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.OnMouseMove);
-            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.OnMouseUp);
+            this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -68,6 +90,8 @@
         #endregion
 
         private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.Button MapOpen;
 
 
     }
