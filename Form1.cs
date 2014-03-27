@@ -18,10 +18,29 @@ namespace CandyFactoryMapEditor
         List<Point> m_CurvePoints = new List<Point>();
 
         Bitmap m_kMapImage = null;
+        Bitmap m_backBuffer;        // 더블 버퍼링
+
+        Graphics _graphics;
+        Graphics m_Paintgraphics;
+
+        BackBufferPanel m_Panel1 = new BackBufferPanel();
 
         public Form1()
         {
             InitializeComponent();
+
+            this.splitContainer1.Panel1.Controls.Add(m_Panel1);
+
+
+            m_backBuffer = new Bitmap(this.ClientSize.Width, this.ClientSize.Height);
+            _graphics = Graphics.FromImage(m_backBuffer);
+
+            m_Panel1.Size = new Size(this.ClientSize.Width, this.ClientSize.Height);
+            m_Panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer1_Panel1_Paint);
+            m_Panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.OnMouseDown);
+            m_Panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.OnMouseMove);
+            m_Panel1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.OnMouseUp);
+            m_Panel1.Resize += new EventHandler(this.OnResize);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -183,8 +202,6 @@ namespace CandyFactoryMapEditor
                 else
                     this.Cursor = Cursors.Default;
             }
-
-            Invalidate(true);
         }
 
         private void OnMouseDown(object sender, MouseEventArgs e)
@@ -206,29 +223,42 @@ namespace CandyFactoryMapEditor
             //Invalidate(false);
         }
 
-        private void OnPaint(object sender, PaintEventArgs e)
-        {
-            //Pen _pen = new Pen(Color.Red);
-            //_pen.Width = 3;
-
-            //Graphics _graphics = e.Graphics;
-
-            //// 커브선 그리기
-            ////_graphics.DrawBeziers(_pen, m_CurvePoints.ToArray());
-            //_graphics.DrawCurve(_pen, m_CurvePoints.ToArray());
-
-            //// 포인트 그리기
-            //_pen.Color = Color.Blue;
-            //for (int i = 0; i < m_ControlPoints.Count; ++i)
-            //    _graphics.DrawEllipse(_pen, new Rectangle(m_ControlPoints[i], new Size(5, 5)));
-
-            //    _pen.Dispose();
-            //_graphics.Dispose();
-        }
-
         private void splitContainer1_Panel1_Paint(object sender, PaintEventArgs e)
         {
-            Graphics _graphics = e.Graphics;
+            e.Graphics.DrawImageUnscaled(m_backBuffer, 0, 0);
+            //e.Graphics.DrawImage(m_backBuffer, 0, 0);
+        }
+
+        private void OnResize(object sender, EventArgs e)
+        {
+            if (m_backBuffer != null)
+            {
+                m_backBuffer.Dispose();
+                m_backBuffer = null;
+            }
+
+            m_backBuffer = new Bitmap(this.splitContainer1.Panel1.Width, this.splitContainer1.Panel1.Height);
+            m_Panel1.Size = new Size(this.splitContainer1.Panel1.Width, this.splitContainer1.Panel1.Height);
+        }
+
+        // 맵에 사용할 파일을 가져온다.
+        private void MapOpen_Click(object sender, EventArgs e)
+        {
+            this.openFileDialog1.InitialDirectory = Directory.GetCurrentDirectory();
+            this.openFileDialog1.DefaultExt = "MapFile";
+            this.openFileDialog1.Filter = "All Files(*.*)|*.*|PNG Files(*.png)|*.png |JPG Files(*.jpg)|*.jpg";
+
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                m_kMapImage = new Bitmap(this.openFileDialog1.FileName);
+                //m_kClipView.OpenProject(openFileDialog1.FileName);
+            }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            _graphics = Graphics.FromImage(m_backBuffer);
+            _graphics.Clear(Color.Gray);
 
             // Map Draw
             if (m_kMapImage != null)
@@ -249,25 +279,33 @@ namespace CandyFactoryMapEditor
             // 시작과 끝은 따로
             _pen.Color = Color.Purple;
             _graphics.DrawRectangle(_pen, new Rectangle(m_ControlPoints[0], new Size(5, 5)));
+            _graphics.DrawString("Start", new Font("Arial", 15), new SolidBrush(Color.Black), m_ControlPoints[0]);
             _pen.Color = Color.Green;
             _graphics.DrawRectangle(_pen, new Rectangle(m_ControlPoints[m_ControlPoints.Count - 1], new Size(5, 5)));
+            _graphics.DrawString("End", new Font("Arial", 15), new SolidBrush(Color.Black), m_ControlPoints[m_ControlPoints.Count - 1]);
 
             _pen.Dispose();
             _graphics.Dispose();
+
+            m_Panel1.Invalidate();
         }
 
-        // 맵에 사용할 파일을 가져온다.
-        private void MapOpen_Click(object sender, EventArgs e)
+        // 곡선 라인 저장
+        private void SaveFile_Click(object sender, EventArgs e)
         {
-            this.openFileDialog1.InitialDirectory = Directory.GetCurrentDirectory();
-            this.openFileDialog1.DefaultExt = "MapFile";
-            this.openFileDialog1.Filter = "All Files(*.*)|*.*|PNG Files(*.png)|*.png |JPG Files(*.jpg)|*.jpg";
 
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                m_kMapImage = new Bitmap(this.openFileDialog1.FileName);
-                //m_kClipView.OpenProject(openFileDialog1.FileName);
-            }
+        }
+
+        // 불러오기
+        private void LoadFile_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        // 맵파일로 출력
+        private void ExportMapFile_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

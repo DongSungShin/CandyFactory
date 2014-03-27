@@ -28,9 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.MapOpen = new System.Windows.Forms.Button();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.SaveFile = new System.Windows.Forms.Button();
+            this.LoadFile = new System.Windows.Forms.Button();
+            this.ExportMapFile = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -44,21 +49,18 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer1_Panel1_Paint);
-            this.splitContainer1.Panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.OnMouseDown);
-            this.splitContainer1.Panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.OnMouseMove);
-            this.splitContainer1.Panel1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.OnMouseUp);
+            this.splitContainer1.Panel1.Resize += new System.EventHandler(this.OnResize);
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.splitContainer1.Panel2.Controls.Add(this.ExportMapFile);
+            this.splitContainer1.Panel2.Controls.Add(this.LoadFile);
+            this.splitContainer1.Panel2.Controls.Add(this.SaveFile);
             this.splitContainer1.Panel2.Controls.Add(this.MapOpen);
             this.splitContainer1.Size = new System.Drawing.Size(1126, 624);
-            this.splitContainer1.SplitterDistance = 818;
+            this.splitContainer1.SplitterDistance = 817;
             this.splitContainer1.TabIndex = 0;
-            // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.FileName = "openFileDialog1";
             // 
             // MapOpen
             // 
@@ -70,6 +72,46 @@
             this.MapOpen.UseVisualStyleBackColor = true;
             this.MapOpen.Click += new System.EventHandler(this.MapOpen_Click);
             // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // timer1
+            // 
+            this.timer1.Enabled = true;
+            this.timer1.Interval = 10;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // SaveFile
+            // 
+            this.SaveFile.Location = new System.Drawing.Point(15, 65);
+            this.SaveFile.Name = "SaveFile";
+            this.SaveFile.Size = new System.Drawing.Size(162, 27);
+            this.SaveFile.TabIndex = 1;
+            this.SaveFile.Text = "파일 저장";
+            this.SaveFile.UseVisualStyleBackColor = true;
+            this.SaveFile.Click += new System.EventHandler(this.SaveFile_Click);
+            // 
+            // LoadFile
+            // 
+            this.LoadFile.Location = new System.Drawing.Point(15, 120);
+            this.LoadFile.Name = "LoadFile";
+            this.LoadFile.Size = new System.Drawing.Size(162, 29);
+            this.LoadFile.TabIndex = 2;
+            this.LoadFile.Text = "파일 불러오기";
+            this.LoadFile.UseVisualStyleBackColor = true;
+            this.LoadFile.Click += new System.EventHandler(this.LoadFile_Click);
+            // 
+            // ExportMapFile
+            // 
+            this.ExportMapFile.Location = new System.Drawing.Point(15, 180);
+            this.ExportMapFile.Name = "ExportMapFile";
+            this.ExportMapFile.Size = new System.Drawing.Size(162, 31);
+            this.ExportMapFile.TabIndex = 3;
+            this.ExportMapFile.Text = "맵파일로저장";
+            this.ExportMapFile.UseVisualStyleBackColor = true;
+            this.ExportMapFile.Click += new System.EventHandler(this.ExportMapFile_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
@@ -79,7 +121,6 @@
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
-            this.Paint += new System.Windows.Forms.PaintEventHandler(this.OnPaint);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
@@ -92,6 +133,10 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Button MapOpen;
+        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Button LoadFile;
+        private System.Windows.Forms.Button SaveFile;
+        private System.Windows.Forms.Button ExportMapFile;
 
 
     }
