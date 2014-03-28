@@ -30,12 +30,13 @@
         {
             this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.ExportMapFile = new System.Windows.Forms.Button();
+            this.LoadFile = new System.Windows.Forms.Button();
+            this.SaveFile = new System.Windows.Forms.Button();
             this.MapOpen = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.SaveFile = new System.Windows.Forms.Button();
-            this.LoadFile = new System.Windows.Forms.Button();
-            this.ExportMapFile = new System.Windows.Forms.Button();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -62,6 +63,36 @@
             this.splitContainer1.SplitterDistance = 817;
             this.splitContainer1.TabIndex = 0;
             // 
+            // ExportMapFile
+            // 
+            this.ExportMapFile.Location = new System.Drawing.Point(15, 180);
+            this.ExportMapFile.Name = "ExportMapFile";
+            this.ExportMapFile.Size = new System.Drawing.Size(162, 31);
+            this.ExportMapFile.TabIndex = 3;
+            this.ExportMapFile.Text = "맵파일로저장";
+            this.ExportMapFile.UseVisualStyleBackColor = true;
+            this.ExportMapFile.Click += new System.EventHandler(this.ExportMapFile_Click);
+            // 
+            // LoadFile
+            // 
+            this.LoadFile.Location = new System.Drawing.Point(15, 120);
+            this.LoadFile.Name = "LoadFile";
+            this.LoadFile.Size = new System.Drawing.Size(162, 29);
+            this.LoadFile.TabIndex = 2;
+            this.LoadFile.Text = "파일 불러오기";
+            this.LoadFile.UseVisualStyleBackColor = true;
+            this.LoadFile.Click += new System.EventHandler(this.LoadFile_Click);
+            // 
+            // SaveFile
+            // 
+            this.SaveFile.Location = new System.Drawing.Point(15, 65);
+            this.SaveFile.Name = "SaveFile";
+            this.SaveFile.Size = new System.Drawing.Size(162, 27);
+            this.SaveFile.TabIndex = 1;
+            this.SaveFile.Text = "파일 저장";
+            this.SaveFile.UseVisualStyleBackColor = true;
+            this.SaveFile.Click += new System.EventHandler(this.SaveFile_Click);
+            // 
             // MapOpen
             // 
             this.MapOpen.Location = new System.Drawing.Point(15, 12);
@@ -81,36 +112,6 @@
             this.timer1.Enabled = true;
             this.timer1.Interval = 10;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // SaveFile
-            // 
-            this.SaveFile.Location = new System.Drawing.Point(15, 65);
-            this.SaveFile.Name = "SaveFile";
-            this.SaveFile.Size = new System.Drawing.Size(162, 27);
-            this.SaveFile.TabIndex = 1;
-            this.SaveFile.Text = "파일 저장";
-            this.SaveFile.UseVisualStyleBackColor = true;
-            this.SaveFile.Click += new System.EventHandler(this.SaveFile_Click);
-            // 
-            // LoadFile
-            // 
-            this.LoadFile.Location = new System.Drawing.Point(15, 120);
-            this.LoadFile.Name = "LoadFile";
-            this.LoadFile.Size = new System.Drawing.Size(162, 29);
-            this.LoadFile.TabIndex = 2;
-            this.LoadFile.Text = "파일 불러오기";
-            this.LoadFile.UseVisualStyleBackColor = true;
-            this.LoadFile.Click += new System.EventHandler(this.LoadFile_Click);
-            // 
-            // ExportMapFile
-            // 
-            this.ExportMapFile.Location = new System.Drawing.Point(15, 180);
-            this.ExportMapFile.Name = "ExportMapFile";
-            this.ExportMapFile.Size = new System.Drawing.Size(162, 31);
-            this.ExportMapFile.TabIndex = 3;
-            this.ExportMapFile.Text = "맵파일로저장";
-            this.ExportMapFile.UseVisualStyleBackColor = true;
-            this.ExportMapFile.Click += new System.EventHandler(this.ExportMapFile_Click);
             // 
             // Form1
             // 
@@ -137,6 +138,7 @@
         private System.Windows.Forms.Button LoadFile;
         private System.Windows.Forms.Button SaveFile;
         private System.Windows.Forms.Button ExportMapFile;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
 
 
     }

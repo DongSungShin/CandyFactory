@@ -10,9 +10,12 @@ using System.IO;
 
 namespace CandyFactoryMapEditor
 {
+
+
     public partial class Form1 : Form
     {
         int m_MoveIndex = -1;
+        int m_nLineCount = 1;
 
         List<Point> m_ControlPoints = new List<Point>();
         List<Point> m_CurvePoints = new List<Point>();
@@ -24,6 +27,8 @@ namespace CandyFactoryMapEditor
         Graphics m_Paintgraphics;
 
         BackBufferPanel m_Panel1 = new BackBufferPanel();
+
+        string m_szMapFilePath = null;
 
         public Form1()
         {
@@ -252,6 +257,7 @@ namespace CandyFactoryMapEditor
             {
                 m_kMapImage = new Bitmap(this.openFileDialog1.FileName);
                 //m_kClipView.OpenProject(openFileDialog1.FileName);
+                m_szMapFilePath = this.openFileDialog1.FileName;
             }
         }
 
@@ -293,19 +299,121 @@ namespace CandyFactoryMapEditor
         // 곡선 라인 저장
         private void SaveFile_Click(object sender, EventArgs e)
         {
+            this.saveFileDialog1.InitialDirectory = Directory.GetCurrentDirectory();
+            this.saveFileDialog1.DefaultExt = "SaveFile";
+            this.saveFileDialog1.Filter = "Save Files(*.sav)|*.sav";
 
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                FileManager filemanager = new FileManager();
+                filemanager.m_szMapFileName = m_szMapFilePath;
+                filemanager.m_LPoint = m_ControlPoints;
+                filemanager.m_nLineCount = m_nLineCount;
+
+                filemanager.WirteFile(saveFileDialog1.FileName);
+            }
         }
 
         // 불러오기
         private void LoadFile_Click(object sender, EventArgs e)
         {
+            this.openFileDialog1.InitialDirectory = Directory.GetCurrentDirectory();
+            this.openFileDialog1.DefaultExt = "SaveFile";
+            this.openFileDialog1.Filter = "Save Files(*.sav)|*.sav";
 
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                FileManager filemanager = new FileManager();
+                filemanager.LoadFile(this.openFileDialog1.FileName);
+
+                // 맵 파일이 있다면 불러오기
+                if (filemanager.m_szMapFileName != null)
+                {
+                    m_szMapFilePath = filemanager.m_szMapFileName;
+                    if (m_kMapImage != null)
+                        m_kMapImage.Dispose();
+
+                    m_kMapImage = new Bitmap(m_szMapFilePath);
+                }
+
+                m_ControlPoints = filemanager.m_LPoint;
+                m_nLineCount = filemanager.m_nLineCount;
+
+                // 곡선 재 계산
+                RecalcSpline();
+            }
         }
 
         // 맵파일로 출력
         private void ExportMapFile_Click(object sender, EventArgs e)
         {
 
+        }
+    }
+
+    // *.sav파일을 읽고 쓴다.
+    // 데이터를 넘겨준다.
+    public class FileManager
+    {
+        public List<Point> m_LPoint = new List<Point>();
+        public string m_szMapFileName = null;
+        public int m_nLineCount = 1;
+
+        public FileManager()
+        {
+        }
+
+        public void WirteFile(string szFileName)
+        {
+            FileStream fp = new FileStream(szFileName, FileMode.Create);
+            BinaryWriter br = new BinaryWriter(fp);
+
+            if (m_szMapFileName != null)
+                br.Write(m_szMapFileName);
+            else
+                br.Write("null");
+
+            br.Write(m_LPoint.Count);
+            foreach (Point pt in m_LPoint)
+            {
+                br.Write(pt.X);
+                br.Write(pt.Y);
+            }
+            br.Write(m_nLineCount);
+
+            fp.Close();
+            br.Close();
+        }
+
+        public void LoadFile(string szFileName)
+        {
+            FileStream fp = new FileStream(szFileName, FileMode.Open);
+            BinaryReader br = new BinaryReader(fp);
+
+            //int count = br.ReadInt32();
+            //char[] mapfile = br.ReadChars(count);
+            string mapfile = br.ReadString();
+            if (mapfile.Equals("null"))
+                m_szMapFileName = null;
+            else
+                m_szMapFileName = mapfile;
+
+            int Count = br.ReadInt32();
+            m_LPoint = null;
+            m_LPoint = new List<Point>();
+
+            for (int i = 0; i < Count; ++i)
+            {
+                int x = br.ReadInt32();
+                int y = br.ReadInt32();
+
+                m_LPoint.Add(new Point(x, y));
+            }
+
+            m_nLineCount = br.ReadInt32();
+
+            fp.Close();
+            br.Close();
         }
     }
 }
