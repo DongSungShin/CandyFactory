@@ -37,6 +37,7 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.AddLine = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -55,6 +56,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.splitContainer1.Panel2.Controls.Add(this.AddLine);
             this.splitContainer1.Panel2.Controls.Add(this.ExportMapFile);
             this.splitContainer1.Panel2.Controls.Add(this.LoadFile);
             this.splitContainer1.Panel2.Controls.Add(this.SaveFile);
@@ -65,9 +67,9 @@
             // 
             // ExportMapFile
             // 
-            this.ExportMapFile.Location = new System.Drawing.Point(15, 180);
+            this.ExportMapFile.Location = new System.Drawing.Point(159, 68);
             this.ExportMapFile.Name = "ExportMapFile";
-            this.ExportMapFile.Size = new System.Drawing.Size(162, 31);
+            this.ExportMapFile.Size = new System.Drawing.Size(121, 27);
             this.ExportMapFile.TabIndex = 3;
             this.ExportMapFile.Text = "맵파일로저장";
             this.ExportMapFile.UseVisualStyleBackColor = true;
@@ -75,9 +77,9 @@
             // 
             // LoadFile
             // 
-            this.LoadFile.Location = new System.Drawing.Point(15, 120);
+            this.LoadFile.Location = new System.Drawing.Point(159, 12);
             this.LoadFile.Name = "LoadFile";
-            this.LoadFile.Size = new System.Drawing.Size(162, 29);
+            this.LoadFile.Size = new System.Drawing.Size(112, 29);
             this.LoadFile.TabIndex = 2;
             this.LoadFile.Text = "파일 불러오기";
             this.LoadFile.UseVisualStyleBackColor = true;
@@ -85,9 +87,9 @@
             // 
             // SaveFile
             // 
-            this.SaveFile.Location = new System.Drawing.Point(15, 65);
+            this.SaveFile.Location = new System.Drawing.Point(36, 13);
             this.SaveFile.Name = "SaveFile";
-            this.SaveFile.Size = new System.Drawing.Size(162, 27);
+            this.SaveFile.Size = new System.Drawing.Size(112, 27);
             this.SaveFile.TabIndex = 1;
             this.SaveFile.Text = "파일 저장";
             this.SaveFile.UseVisualStyleBackColor = true;
@@ -95,11 +97,11 @@
             // 
             // MapOpen
             // 
-            this.MapOpen.Location = new System.Drawing.Point(15, 12);
+            this.MapOpen.Location = new System.Drawing.Point(26, 68);
             this.MapOpen.Name = "MapOpen";
-            this.MapOpen.Size = new System.Drawing.Size(162, 27);
+            this.MapOpen.Size = new System.Drawing.Size(121, 27);
             this.MapOpen.TabIndex = 0;
-            this.MapOpen.Text = "맵 파일 가져오기";
+            this.MapOpen.Text = "맵 이미지 가져오기";
             this.MapOpen.UseVisualStyleBackColor = true;
             this.MapOpen.Click += new System.EventHandler(this.MapOpen_Click);
             // 
@@ -112,6 +114,16 @@
             this.timer1.Enabled = true;
             this.timer1.Interval = 10;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // AddLine
+            // 
+            this.AddLine.Location = new System.Drawing.Point(26, 122);
+            this.AddLine.Name = "AddLine";
+            this.AddLine.Size = new System.Drawing.Size(75, 23);
+            this.AddLine.TabIndex = 4;
+            this.AddLine.Text = "라인추가";
+            this.AddLine.UseVisualStyleBackColor = true;
+            this.AddLine.Click += new System.EventHandler(this.AddLine_Click);
             // 
             // Form1
             // 
@@ -139,6 +151,7 @@
         private System.Windows.Forms.Button SaveFile;
         private System.Windows.Forms.Button ExportMapFile;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.Button AddLine;
 
 
     }

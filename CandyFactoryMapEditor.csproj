@@ -49,6 +49,7 @@
     <Compile Include="BackBufferPanel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="FileManager.cs" />
     <Compile Include="Spline.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>

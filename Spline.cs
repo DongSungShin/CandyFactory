@@ -8,7 +8,9 @@ using System.Drawing;
 
 namespace CandyFactoryMapEditor
 {
-    
+    /// <summary>
+    /// 라인을 따라 생성되는 포인트
+    /// </summary>
     public class Curve
     {
         public readonly float DIV_FACTOR = 4.0f; //adjust this factor to adjust the curve smoothness    
@@ -98,6 +100,9 @@ namespace CandyFactoryMapEditor
 	    }
     }
 
+    /// <summary>
+    /// Curve 데이터로 라인 생성
+    /// </summary>
     public class Spline
     {
         float[] Px;
@@ -259,5 +264,141 @@ namespace CandyFactoryMapEditor
 			    c.GetCurve(Px[i],Py[i], ref points, ref PointCount);
 		    }
 	    }
+    }
+
+    /// <summary>
+    /// Spline을 화면에 그린다.
+    /// </summary>
+    public class DrawLine
+    {
+        public List<Point> m_ControlPoints = new List<Point>();
+        public List<Point> m_CurvePoints = new List<Point>();
+
+        public DrawLine()
+        {
+            // 최초 위치 설정
+            Point pt = new Point();
+            pt.X = 50;
+            pt.Y = 50;
+            m_ControlPoints.Add(pt);
+            pt.X = 50 + 125;
+            pt.Y = 50 + 125;
+            m_ControlPoints.Add(pt);
+            pt.X = 300;
+            pt.Y = 300;
+            m_ControlPoints.Add(pt);
+            RecalcSpline();
+        }
+
+        //--------------------------------------------
+        // 스플라인 곡선 재 계산
+        //--------------------------------------------
+        public void RecalcSpline()
+        {
+            if (m_ControlPoints.Count() > 1)
+            {
+                // 스플라인 생성
+                Spline spline = new Spline(ref m_ControlPoints, m_ControlPoints.Count);
+                // 커브 생성
+                spline.Generate();
+                // 커브 수를 가져옴
+                //m_CurvePoints.Capacity = spline.GetCurveCount();
+                m_CurvePoints.Clear();
+
+                int PointCount = 0;
+                // 커브 데이터를 생성
+                spline.GetCurve(ref m_CurvePoints, ref PointCount);
+            }
+        }
+
+        //--------------------------------------------
+        // 라인안에 있는지 체크
+        //--------------------------------------------
+        public int IsLinePoint(Point point)
+        {
+            if (m_CurvePoints.Count > 1)
+            {
+                //LPPOINT lpPoint = m_CurvePoints.GetData();
+                //LPPOINT lpPoint2 = m_ControlPoints.GetData();
+                if (m_CurvePoints.Count > 0 && m_ControlPoints.Count > 0)
+                {
+                    double dblDistance;
+                    int nSize = m_CurvePoints.Count;
+                    int nSize2 = m_ControlPoints.Count;
+                    int nIndex = -1;
+                    for (int i = 0; i < (nSize - 1); ++i)
+                    {
+                        Point pt1 = m_CurvePoints[i];
+                        Point pt2 = m_CurvePoints[i + 1];
+
+                        for (int j = 0; j < (nSize2); ++j)
+                        {
+                            Point pt3 = m_ControlPoints[j];
+                            if ((pt1.X == pt3.X) && (pt1.Y == pt3.Y))
+                            {
+                                nIndex = j;
+                                break;
+                            }
+                        }
+
+                        dblDistance = CalcDistanceLine2Point(pt1, pt2, point);
+                        if (dblDistance <= 1.0f)
+                        {
+                            return nIndex;
+                        }
+                    }
+                }
+            }
+
+            return -1;
+        }
+
+        public double CalcDistanceLine2Point(Point ptLineStart, Point ptLineEnd, Point point)
+        {
+            double dLineStartX = ptLineStart.X;
+            double dLineStartY = ptLineStart.Y;
+
+            double dLineEndX = ptLineEnd.X;
+            double dLineEndY = ptLineEnd.Y;
+            double dPointX = point.X;
+            double dPointY = point.Y;
+            double dDistanceStart2Point = Math.Abs(Math.Sqrt(Math.Pow((dLineStartX - dPointX), 2) + Math.Pow((dLineStartY - dPointY), 2)));
+            double dDistanceEnd2Point = Math.Abs(Math.Sqrt(Math.Pow((dLineEndX - dPointX), 2) + Math.Pow((dLineEndY - dPointY), 2)));
+            double dDistanceStart2End = Math.Abs(Math.Sqrt(Math.Pow((dLineEndX - dLineStartX), 2) + Math.Pow((dLineEndY - dLineStartY), 2)));
+            double dAngleStart = Math.Acos((Math.Pow((dDistanceStart2Point), 2) + Math.Pow((dDistanceStart2End), 2) - Math.Pow((dDistanceEnd2Point), 2))
+                                    / (2 * dDistanceStart2Point * dDistanceStart2End));
+            double dDistanceStart2PointCross = (dDistanceStart2Point * Math.Cos(dAngleStart));
+            double dDistance = dDistanceStart2PointCross * Math.Tan(dAngleStart);
+            return dDistance;
+        }
+
+        //--------------------------------------------
+        // 마우스가 포인트안에 있는지 체크
+        //--------------------------------------------
+        public int IsInsideControlPoint(Point point)
+        {
+            int count = m_ControlPoints.Count;
+            if (count > 0)
+            {
+                for (int i = 0; i < count; ++i)
+                {
+                    if (Distance(m_ControlPoints[i], point) < 5)
+                        return i;
+                }
+            }
+
+            return -1;
+        }
+
+        //--------------------------------------------
+        // 마우스가 포인트안에 있는지 거리 체크
+        //--------------------------------------------
+        private double Distance(Point p1, Point p2)
+        {
+            int dx = Math.Abs(p1.X - p2.X);
+            int dy = Math.Abs(p1.Y - p2.Y);
+
+            return Math.Sqrt((double)(dx * dx + dy * dy));
+        }
     }
 }
