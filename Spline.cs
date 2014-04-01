@@ -276,16 +276,34 @@ namespace CandyFactoryMapEditor
 
         public DrawLine()
         {
+            int nbase = 50;
+
             // 최초 위치 설정
             Point pt = new Point();
-            pt.X = 50;
-            pt.Y = 50;
+            pt.X = nbase;
+            pt.Y = nbase;
             m_ControlPoints.Add(pt);
-            pt.X = 50 + 125;
-            pt.Y = 50 + 125;
+            pt.X = nbase + 125;
+            pt.Y = nbase + 125;
             m_ControlPoints.Add(pt);
-            pt.X = 300;
-            pt.Y = 300;
+            pt.X = nbase + 250;
+            pt.Y = nbase + 250;
+            m_ControlPoints.Add(pt);
+            RecalcSpline();
+        }
+
+        public DrawLine(int x, int y)
+        {
+            // 최초 위치 설정
+            Point pt = new Point();
+            pt.X = x;
+            pt.Y = y;
+            m_ControlPoints.Add(pt);
+            pt.X = x + 125;
+            pt.Y = y + 125;
+            m_ControlPoints.Add(pt);
+            pt.X = x + 250;
+            pt.Y = y + 250;
             m_ControlPoints.Add(pt);
             RecalcSpline();
         }

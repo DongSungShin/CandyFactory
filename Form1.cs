@@ -13,9 +13,10 @@ namespace CandyFactoryMapEditor
     public partial class Form1 : Form
     {
         int m_MoveIndex = -1;
-        int m_nLineCount = 1;
         string m_szMapFilePath = null;
+        bool m_bPlay = false;
 
+        Rectangle m_Player = new Rectangle(0, 0, 10, 10);
         Bitmap m_kMapImage = null;  // 맵 이미지
         Bitmap m_backBuffer;        // 더블 버퍼링
 
@@ -56,8 +57,12 @@ namespace CandyFactoryMapEditor
 
         private void OnMouseMove(object sender, MouseEventArgs e)
         {
+            bool bFound = false;
             foreach (DrawLine line in m_LDrawLine)
             {
+                if (bFound)
+                    break;
+
                 // 포인트 인덱스 가져오기
                 int index = line.IsInsideControlPoint(e.Location);
                 if (index >= 0)
@@ -68,12 +73,17 @@ namespace CandyFactoryMapEditor
                         line.m_ControlPoints[m_MoveIndex] = e.Location;
                         line.RecalcSpline();
                     }
+
+                    bFound = true;
                 }
                 else
                 {
                     int nLine = line.IsLinePoint(e.Location);
                     if (nLine >= 0)
+                    {
                         this.Cursor = Cursors.Hand;
+                        bFound = true;
+                    }
                     else
                         this.Cursor = Cursors.Default;
                 }
@@ -92,8 +102,7 @@ namespace CandyFactoryMapEditor
                 {
                     int nLine = line.IsLinePoint(e.Location);
                     if (nLine >= 0)
-                        //m_ControlPoints.Add(e.Location);
-                        line.m_ControlPoints.Insert(line.m_ControlPoints.Count - 1, e.Location);
+                        line.m_ControlPoints.Insert(nLine + 1, e.Location);
 
                     line.RecalcSpline();
                 }
@@ -166,6 +175,13 @@ namespace CandyFactoryMapEditor
 
             }
 
+            // 라인에 따른 이동 플레이
+            if (m_bPlay)
+            {
+                //m_Player
+
+            }
+
             _pen.Dispose();
             _graphics.Dispose();
 
@@ -181,12 +197,10 @@ namespace CandyFactoryMapEditor
 
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                //FileManager filemanager = new FileManager();
-                //filemanager.m_szMapFileName = m_szMapFilePath;
-                //filemanager.m_LPoint = m_ControlPoints;
-                //filemanager.m_nLineCount = m_nLineCount;
+                foreach (DrawLine draw in m_LDrawLine)
+                    FileManager.Instance.AddData(draw.m_ControlPoints, m_szMapFilePath);
 
-                //filemanager.WirteFile(saveFileDialog1.FileName);
+                FileManager.Instance.WirteFile(saveFileDialog1.FileName);
             }
         }
 
@@ -199,24 +213,31 @@ namespace CandyFactoryMapEditor
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                FileManager filemanager = new FileManager();
-                filemanager.LoadFile(this.openFileDialog1.FileName);
+                FileManager.Instance.LoadFile(this.openFileDialog1.FileName);
 
                 // 맵 파일이 있다면 불러오기
-                if (filemanager.m_szMapFileName != null)
+                if (FileManager.Instance.m_szMapFileName != null)
                 {
-                    m_szMapFilePath = filemanager.m_szMapFileName;
+                    m_szMapFilePath = FileManager.Instance.m_szMapFileName;
                     if (m_kMapImage != null)
                         m_kMapImage.Dispose();
 
                     m_kMapImage = new Bitmap(m_szMapFilePath);
                 }
 
-                //m_ControlPoints = filemanager.m_LPoint;
-                //m_nLineCount = filemanager.m_nLineCount;
+                m_LDrawLine.Clear();
+                for(int i = 0; i < FileManager.Instance.m_LDataFile.Count; ++i)
+                {
+                    DataFile data = FileManager.Instance.m_LDataFile[i];
 
-                //// 곡선 재 계산
-                //RecalcSpline();
+                    DrawLine draw = new DrawLine();
+                    draw.m_ControlPoints = data.m_LPoint;
+
+                    // 곡선 재 계산
+                    draw.RecalcSpline();
+
+                    m_LDrawLine.Add(draw);
+                }
             }
         }
 
@@ -229,7 +250,24 @@ namespace CandyFactoryMapEditor
         // 라인 추가 버튼
         private void AddLine_Click(object sender, EventArgs e)
         {
+            if (m_LDrawLine.Count >= 2)
+            {
+                MessageBox.Show("2개 이상 만들 수 없다.");
+                return;
+            }
 
+            DrawLine drawline = new DrawLine(100, 50);
+            m_LDrawLine.Add(drawline);
+        }
+
+        // 라인 플레이
+        private void Play_Click(object sender, EventArgs e)
+        {
+            m_bPlay = !m_bPlay;
+            if(m_bPlay)
+            {
+                m_Player.Location = m_LDrawLine[0].m_CurvePoints[0];
+            }
         }
     }
 }

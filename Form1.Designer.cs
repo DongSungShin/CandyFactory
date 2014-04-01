@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.AddLine = new System.Windows.Forms.Button();
             this.ExportMapFile = new System.Windows.Forms.Button();
             this.LoadFile = new System.Windows.Forms.Button();
             this.SaveFile = new System.Windows.Forms.Button();
@@ -37,7 +38,7 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.AddLine = new System.Windows.Forms.Button();
+            this.Play = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -56,6 +57,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.splitContainer1.Panel2.Controls.Add(this.Play);
             this.splitContainer1.Panel2.Controls.Add(this.AddLine);
             this.splitContainer1.Panel2.Controls.Add(this.ExportMapFile);
             this.splitContainer1.Panel2.Controls.Add(this.LoadFile);
@@ -64,6 +66,16 @@
             this.splitContainer1.Size = new System.Drawing.Size(1126, 624);
             this.splitContainer1.SplitterDistance = 817;
             this.splitContainer1.TabIndex = 0;
+            // 
+            // AddLine
+            // 
+            this.AddLine.Location = new System.Drawing.Point(26, 122);
+            this.AddLine.Name = "AddLine";
+            this.AddLine.Size = new System.Drawing.Size(75, 23);
+            this.AddLine.TabIndex = 4;
+            this.AddLine.Text = "라인추가";
+            this.AddLine.UseVisualStyleBackColor = true;
+            this.AddLine.Click += new System.EventHandler(this.AddLine_Click);
             // 
             // ExportMapFile
             // 
@@ -115,15 +127,15 @@
             this.timer1.Interval = 10;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // AddLine
+            // Play
             // 
-            this.AddLine.Location = new System.Drawing.Point(26, 122);
-            this.AddLine.Name = "AddLine";
-            this.AddLine.Size = new System.Drawing.Size(75, 23);
-            this.AddLine.TabIndex = 4;
-            this.AddLine.Text = "라인추가";
-            this.AddLine.UseVisualStyleBackColor = true;
-            this.AddLine.Click += new System.EventHandler(this.AddLine_Click);
+            this.Play.Location = new System.Drawing.Point(23, 240);
+            this.Play.Name = "Play";
+            this.Play.Size = new System.Drawing.Size(99, 38);
+            this.Play.TabIndex = 5;
+            this.Play.Text = "Play";
+            this.Play.UseVisualStyleBackColor = true;
+            this.Play.Click += new System.EventHandler(this.Play_Click);
             // 
             // Form1
             // 
@@ -152,6 +164,7 @@
         private System.Windows.Forms.Button ExportMapFile;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Button AddLine;
+        private System.Windows.Forms.Button Play;
 
 
     }
